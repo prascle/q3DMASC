@@ -17,6 +17,10 @@
 
 #include "qTrain3DMASCDialog.h"
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QTableWidgetItem>
 #include <QMessageBox>
@@ -200,7 +204,14 @@ void Train3DMASCDialog::onExportResults(QString filePath/*=""*/)
 	QSettings settings;
 	settings.beginGroup("3DMASC");
 	QString outputPath = settings.value("FilePath", QCoreApplication::applicationDirPath()).toString();
+#ifdef Q_OS_MAC
+	filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+	instFAD->disableActionDelete();
+#endif
 	QString outputFilename = QFileDialog::getSaveFileName(this, "Export feature importance matrix", outputPath, "*.csv");
+#ifdef Q_OS_MAC
+	instFAD->enableActionDelete();
+#endif
 	if (outputFilename.isNull())
 	{
 		//process cancelled by the user

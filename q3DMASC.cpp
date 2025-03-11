@@ -29,6 +29,10 @@
 #include <ccPointCloud.h>
 #include <ccProgressDialog.h>
 
+#ifdef Q_OS_MAC
+#include <ccFilterActionDelete.h>
+#endif
+
 //Qt
 #include <QtGui>
 #include <QtCore>
@@ -759,7 +763,14 @@ void q3DMASCPlugin::doTrainAction()
 					QSettings settings;
 					settings.beginGroup("3DMASC");
 					QString outputPath = settings.value("FilePath", QCoreApplication::applicationDirPath()).toString();
+#ifdef Q_OS_MAC
+					filterActionDelete* instFAD =filterActionDelete::getFilterActionDelete();
+					instFAD->disableActionDelete();
+#endif
 					outputFilename = QFileDialog::getSaveFileName(m_app->getMainWindow(), "Save 3DMASC classifier", outputPath, "*.txt");
+#ifdef Q_OS_MAC
+					instFAD->enableActionDelete();
+#endif
 					if (outputFilename.isNull())
 					{
 						//process cancelled by the user
