@@ -107,7 +107,12 @@ void q3DMASCPlugin::doClassifyAction()
 		QSettings settings;
 		settings.beginGroup("3DMASC");
 		QString inputPath = settings.value("FilePath", QCoreApplication::applicationDirPath()).toString();
+#ifdef Q_OS_MAC
+		inputFilename = QFileDialog::getOpenFileName(m_app->getMainWindow(), "Load 3DMASC classifier file", inputPath, "*.txt",
+	  	  	  	  	  	    						 nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		inputFilename = QFileDialog::getOpenFileName(m_app->getMainWindow(), "Load 3DMASC classifier file", inputPath, "*.txt");
+#endif
 		if (inputFilename.isNull())
 		{
 			//process cancelled by the user
@@ -247,7 +252,12 @@ void q3DMASCPlugin::doTrainAction()
 		QSettings settings;
 		settings.beginGroup("3DMASC");
 		QString inputPath = settings.value("FilePath", QCoreApplication::applicationDirPath()).toString();
+#ifdef Q_OS_MAC
+		inputFilename = QFileDialog::getOpenFileName(m_app->getMainWindow(), "Load 3DMASC training file", inputPath, "*.txt",
+	  	  	  	  	  	    						 nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 		inputFilename = QFileDialog::getOpenFileName(m_app->getMainWindow(), "Load 3DMASC training file", inputPath, "*.txt");
+#endif
 		if (inputFilename.isNull())
 		{
 			//process cancelled by the user
@@ -759,7 +769,12 @@ void q3DMASCPlugin::doTrainAction()
 					QSettings settings;
 					settings.beginGroup("3DMASC");
 					QString outputPath = settings.value("FilePath", QCoreApplication::applicationDirPath()).toString();
+#ifdef Q_OS_MAC
+					outputFilename = QFileDialog::getSaveFileName(m_app->getMainWindow(), "Save 3DMASC classifier", outputPath, "*.txt",
+	  	  	  	  	  	  	  	    							  nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 					outputFilename = QFileDialog::getSaveFileName(m_app->getMainWindow(), "Save 3DMASC classifier", outputPath, "*.txt");
+#endif
 					if (outputFilename.isNull())
 					{
 						//process cancelled by the user

@@ -200,7 +200,12 @@ void Train3DMASCDialog::onExportResults(QString filePath/*=""*/)
 	QSettings settings;
 	settings.beginGroup("3DMASC");
 	QString outputPath = settings.value("FilePath", QCoreApplication::applicationDirPath()).toString();
+#ifdef Q_OS_MAC
+	QString outputFilename = QFileDialog::getSaveFileName(this, "Export feature importance matrix", outputPath, "*.csv",
+						 	 	 	 	 	 	 	 	  nullptr, QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#else
 	QString outputFilename = QFileDialog::getSaveFileName(this, "Export feature importance matrix", outputPath, "*.csv");
+#endif
 	if (outputFilename.isNull())
 	{
 		//process cancelled by the user
@@ -256,7 +261,9 @@ bool Train3DMASCDialog::openTraceFile()
 	dialog.setFileMode(QFileDialog::DirectoryOnly);
 	dialog.setWindowTitle("Choose a valid directory for the traces");
 	dialog.setDirectory(QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).at(0));
-
+#ifdef Q_OS_MAC
+	dialog.setOptions(QFileDialog::Options() | QFileDialog::DontUseNativeDialog);
+#endif
 	if (!m_traceFile) // create trace file if it does not exists already
 	{
 		m_tracePath = parameterDir.absolutePath() + "/" + m_baseName;
