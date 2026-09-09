@@ -58,12 +58,14 @@ if (PLUGIN_STANDARD_3DMASC)
 	target_link_libraries( ${PROJECT_NAME} ${OpenCV_LIBS} )
 
 	if (WIN32)  # We need to copy the OpenCV "World" DLL file next to CloudCompare.exe
-		if(NOT DEFINED OpenCV_WORLD_DLL OR OpenCV_WORLD_DLL STREQUAL "")
-			message(SEND_ERROR
-				"${CMAKE_CURRENT_LIST_FILE}(${CMAKE_CURRENT_LIST_LINE}):error:"
-				"OpenCV_WORLD_DLL is not set. Please set it in your CMake configuration.")
+		if (NOT USE_CONDA_PACKAGES) # if we are using conda packages, the version and DLLs are not necessarily the same, and DLLs will be copied anyway
+			if(NOT DEFINED OpenCV_WORLD_DLL OR OpenCV_WORLD_DLL STREQUAL "")
+				message(SEND_ERROR
+					"${CMAKE_CURRENT_LIST_FILE}(${CMAKE_CURRENT_LIST_LINE}):error:"
+					"OpenCV_WORLD_DLL is not set. Please set it in your CMake configuration.")
+			endif()
+			copy_files("${OpenCV_WORLD_DLL}" "${CLOUDCOMPARE_DEST_FOLDER}" 1) #mind the quotes!
 		endif()
-		copy_files("${OpenCV_WORLD_DLL}" "${CLOUDCOMPARE_DEST_FOLDER}" 1) #mind the quotes!
 	endif()
 
 	#================
